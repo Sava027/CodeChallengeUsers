@@ -24,7 +24,7 @@ namespace CodeChallengeUsers
                 var originalList = personService.GetPeople(filepath + @"\examples\users.csv");
                 var newList = personService.GetPeople(filepath + @"\examples\newusers.csv");
 
-                var emailList = personService.GetMatchingUserNewEmail(originalList, newList);
+                var emailList = personService.GetMatchingUserNewEmailUsingHashset(originalList, newList);
                 if (emailList == null || !emailList.Any())
                 {
                     Console.WriteLine("No users matches found in provided list");

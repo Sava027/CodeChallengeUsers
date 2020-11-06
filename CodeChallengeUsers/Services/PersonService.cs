@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -14,6 +15,7 @@ namespace CodeChallengeUsers.Services
 
         IEnumerable<Person> GetPeople(string filePath);
         IEnumerable<string> GetMatchingUserNewEmail(IEnumerable<Person> originalList, IEnumerable<Person> newUserList);
+        IEnumerable<string> GetMatchingUserNewEmailUsingHashset(IEnumerable<Person> originalList, IEnumerable<Person> newUserList);
 
     }
     public class PersonService : IPersonService
@@ -37,9 +39,24 @@ namespace CodeChallengeUsers.Services
             {
                 return null;
             }
-           return newUserList
+             return newUserList
                 .Where(x => originalList.Any(y => y.FirstName == x.FirstName && y.LastName == x.LastName))
                 .Select(x=> x.Email);
+        }
+
+
+        public IEnumerable<string> GetMatchingUserNewEmailUsingHashset(IEnumerable<Person> originalList, IEnumerable<Person> newUserList)
+        {
+            if (originalList == null || !originalList.Any() || newUserList == null || !newUserList.Any())
+            {
+                return null;
+            }
+
+            var originalHashSet = originalList.ToHashSet<Person>();
+            var newHashSet = newUserList.ToHashSet<Person>();
+
+           return  newHashSet.Intersect(originalHashSet).Select(x => x.Email);            
+            
         }
     }
 }
